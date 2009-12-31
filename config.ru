@@ -1,3 +1,3 @@
 require 'sinatra' 
 require 'snip'
-run Sinatra.application
+run Sinatra::Application
