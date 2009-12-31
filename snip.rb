@@ -1,7 +1,8 @@
-%w(rubygems sinatra dm-core dm-timestamps dm-aggregates uri haml).each  { |lib| require lib}
+%w(rubygems sinatra dm-core dm-timestamps dm-aggregates uri haml exceptional).each  { |lib| require lib}
 
 module Snip
   SlugSize = 4
+  Exceptional.configure "cf5299531586d06849db43d8ee414f2d73ccf8b6"
   
   get '/' do
     haml :index
@@ -47,6 +48,8 @@ module Snip
   end
 
   error do
+    @error = request.env['sinatra.error']
+    Exceptional.handle(@error)
     haml :index
   end
 
@@ -98,7 +101,7 @@ __END__
       %a{:href => env['HTTP_REFERER'] + @link.slug}
         = env['HTTP_REFERER'] + @link.slug
 %p
-  #err.warning= env['sinatra.error']
+  #err.warning= @error
   
 %form{:method => 'post', :action => '/'}
   %table
