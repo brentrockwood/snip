@@ -39,8 +39,6 @@ module Snip
 
     if link.nil? : raise Sinatra::NotFound end
     
-    link.accesses++
-    link.save
     redirect link.original, 301
   end
   
