@@ -1,4 +1,4 @@
-%w(rubygems sinatra dm-core dm-timestamps dm-aggregates uri ruby-debug haml).each  { |lib| require lib}
+%w(rubygems sinatra dm-core dm-timestamps dm-aggregates uri haml).each  { |lib| require lib}
 
 module Snip
   SlugSize = 4
