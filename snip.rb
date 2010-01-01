@@ -26,7 +26,7 @@ module Snip
       slug = URI::escape params[:slug]
 
       if Link.count(:slug.eql => slug, :original.not => uri.to_s ) > 0
-        raise "A different URL already exists with that slug.  Please choose another or leave blank to get a random slug."
+        raise "A different URL already exists with that name.  Please choose another or leave blank to get a random name."
       end
 
       @link = Link.first_or_create(:slug => slug, :original => uri.to_s)    
@@ -71,24 +71,17 @@ __END__
 !!! 1.1
 %html
   %head
-    %title Snip!
+    %title brentr.ca
     %link{:rel => 'stylesheet', :href => 'http://www.w3.org/StyleSheets/Core/Swiss', :type => 'text/css'}  
   = yield
-  %p
-    %small
-      Copyright 2009
-      %a{:href => 'http://blog.saush.com'}
-        Chang Sau Sheong
-      and
-      %a{:href => 'http://brentrockwood.com/'}
-        Brent Rockwood
-  %p
-    %small
-      %a{:href => 'http://github.com/brentrockwood/snip'}
-        Full source code
         
 @@ index
-%h1.title Snip!
+%h1.title brentr.ca
+%p
+  A URL shortener by
+  %a{:href => 'http://brentrockwood.com/'}
+    Brent Rockwood
+  \.
 - unless @link.nil?
   %p
     %code
@@ -109,10 +102,10 @@ __END__
         %input{:type => 'text', :name => 'original', :size => '50'} 
     %tr
       %td
-        Slug (optional):
+        Custom name (optional):
       %td
         %input{:type => 'text', :name => 'slug', :size => '50'}
     %tr
-      %td
+      %td/
       %td
         %input{:type => 'submit', :value => 'Shorten'}
