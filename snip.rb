@@ -55,7 +55,7 @@ module Snip
   class Link
     include DataMapper::Resource
   
-    property :slug,       String,   :length => SlugSize, :key => true
+    property :slug,       String,   :length => 255, :key => true
     property :original,   String,   :length => 255
     property :accesses,   Integer,  :default => 0
     property :created_at, DateTime 
