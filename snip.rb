@@ -2,18 +2,23 @@
 
 module Snip
   SlugSize = 4
+  BaseUrl = 'http://brentr.ca/'
   
   get '/' do
     haml :index
   end
 
   post '/' do
+    # Validate the target url.
     original = params[:original]
     original = 'http://' + original unless original[0..3] == 'http'
     uri = URI::parse(original)
     raise "Invalid URL" unless uri.kind_of? URI::HTTP or uri.kind_of? URI::HTTPS
-
+    
     if params[:slug].nil? || params[:slug].length == 0
+      # No particular slug was requested.  Return any existing
+      # link with this target, or return a new, randomly named 
+      # link.
       @link = Link.first(:original => uri.to_s)
       
       if @link.nil?
@@ -23,9 +28,12 @@ module Snip
         
       return haml :index
     else
+      # A custom slug was requested.  If it exists with this target,
+      # return it.  If it exists with a different target, complain.
+      # Otherwise, create and return it.
       slug = URI::escape params[:slug]
 
-      if Link.count(:slug.eql => slug, :original.not => uri.to_s ) > 0
+      if Link.count(:slug => slug, :original.not => uri.to_s ) > 0
         raise "A different URL already exists with that name.  Please choose another or leave blank to get a random name."
       end
 
@@ -58,7 +66,11 @@ module Snip
     property :slug,       String,   :length => 255, :key => true
     property :original,   String,   :length => 255
     property :accesses,   Integer,  :default => 0
-    property :created_at, DateTime 
+    property :created_at, DateTime
+  
+    def short_url
+      BaseUrl + slug
+    end
   end
   
   #Link.auto_migrate!
@@ -86,10 +98,10 @@ __END__
   %p
     %code
       = @link.original
-    shortened to 
+    has been shortened to 
     %code
-      %a{:href => env['HTTP_REFERER'] + @link.slug}
-        = env['HTTP_REFERER'] + @link.slug
+      %a{:href => Snip::BaseUrl + @link.slug}
+        = Snip::BaseUrl + @link.slug
 %p
   #err.warning= env['sinatra.error']
   
