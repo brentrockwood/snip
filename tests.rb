@@ -61,6 +61,23 @@ class SnipTests < Test::Unit::TestCase
     end
   end
   
+  def test_accesses
+    link = Snip::Link.create :original => 'http://accesses.com/', :slug => 'accesses'
+    get link.short_url
+    get link.short_url
+    link = Snip::Link.get 'accesses'
+    assert link.accesses == 2
+  end
+  
+  def test_stats
+    link = Snip::Link.create :original => 'http://stats.com/', :slug => 'stats'
+    get link.short_url
+    get link.short_url
+    get link.short_url + "/stats"
+    assert last_response.status == 200
+    assert /Number of accesses:\s*<\/td>\s*<td>\s*2/.match last_response.body
+  end
+  
 private
   def check_success_create
     assert last_response.status == 200

@@ -47,11 +47,18 @@ module Snip
 
     if link.nil? : raise Sinatra::NotFound end
     
+    link.accesses = link.accesses + 1
+    link.save
+    
     redirect link.original, 301
   end
   
   get '/:slug/stats' do
-    'This is where the statistics will go.'
+    @link = Link.get params[:slug]
+
+    if @link.nil? : raise Sinatra::NotFound end
+      
+    haml :stats 
   end
 
   error do
@@ -85,23 +92,24 @@ __END__
   %head
     %title brentr.ca
     %link{:rel => 'stylesheet', :href => 'http://www.w3.org/StyleSheets/Core/Swiss', :type => 'text/css'}  
-  = yield
+  %body
+    %h1.title brentr.ca
+    %p
+      A URL shortener by
+      %a{:href => 'http://brentrockwood.com/'}
+        Brent Rockwood
+      \.
+    = yield
         
 @@ index
-%h1.title brentr.ca
-%p
-  A URL shortener by
-  %a{:href => 'http://brentrockwood.com/'}
-    Brent Rockwood
-  \.
 - unless @link.nil?
   %p
     %code
       = @link.original
     has been shortened to 
     %code
-      %a{:href => Snip::BaseUrl + @link.slug}
-        = Snip::BaseUrl + @link.slug
+      %a{:href => @link.short_url}
+        = @link.short_url
 %p
   #err.warning= env['sinatra.error']
   
@@ -121,3 +129,24 @@ __END__
       %td/
       %td
         %input{:type => 'submit', :value => 'Shorten'}
+
+@@ stats
+%p
+  Statistics for
+  = @link.short_url
+%table
+  %tr
+    %td
+      Original URL:
+    %td
+      = @link.original
+  %tr
+    %td
+      Number of accesses:
+    %td
+      = @link.accesses.to_s
+  %tr
+    %td
+      Created on:
+    %td
+      = @link.created_at.strftime('%Y/%m/%d at %H:%M %Z')
