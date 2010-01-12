@@ -22,7 +22,7 @@ module Snip
       @link = Link.first(:original => uri.to_s)
       
       if @link.nil?
-        slug = rand(62**SlugSize).to_s(36)        
+        slug = rand(36**SlugSize).to_s(36)        
         @link = Link.create(:slug => slug, :original => uri.to_s)
       end
         
