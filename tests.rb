@@ -86,6 +86,12 @@ class SnipTests < Test::Unit::TestCase
     assert /Number of accesses:\s*<\/td>\s*<td>\s*2/.match last_response.body
   end
   
+  def test_tinyurl_endpoint
+    get "/shorten?slug=tinyurl&original=tinyurl.com"
+    assert last_response.status == 200
+    assert last_response.body == Snip::BaseUrl + "tinyurl"
+  end
+  
 private
   def check_success_create
     assert last_response.status == 200
