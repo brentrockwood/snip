@@ -1,3 +1,3 @@
 require 'sinatra' 
-require 'snip'
+require 'lib/snip'
 run Sinatra::Application
