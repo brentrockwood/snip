@@ -95,6 +95,12 @@ class SnipTests < Test::Unit::TestCase
     assert last_response.body == Snip::BaseUrl + "tinyurl"
   end
   
+  def test_redirect
+    get "/shorten?slug=redirect&original=redirect.com"
+    get last_response.body
+    assert last_response.status == 301
+  end
+  
 private
   def check_success_create
     assert last_response.status == 200
