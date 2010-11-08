@@ -2,6 +2,7 @@ require 'snip'
 require 'test/unit'
 require 'rack/test'
 require 'ruby-debug'
+require 'dm-migrations'
 
 set :environment, :test
 DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/test.db")
@@ -60,6 +61,13 @@ class SnipTests < Test::Unit::TestCase
       assert last_response.body.include? 'A different URL already exists'
     end
   end
+  
+  def test_invalid_uri
+    post '/'         
+    assert false
+    rescue
+      assert $!.message.include? "Invalid URL"
+  end 
   
   def test_accesses
     link = Snip::Link.create :original => 'http://accesses.com/', :slug => 'accesses'
