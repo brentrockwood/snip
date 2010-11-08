@@ -23,6 +23,7 @@ class SnipTests < Test::Unit::TestCase
   def test_get_form
     get '/'
     assert last_response.status == 200
+    assert last_response.body.include? "form"
   end
 
   def test_new_no_slug
