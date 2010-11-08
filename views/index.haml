@@ -1,0 +1,26 @@
+- unless @link.nil?
+  %p
+    %code
+      = @link.original
+    has been shortened to 
+    %code
+      %a{:href => @link.short_url}
+        = @link.short_url
+  %p
+    #err.warning= env['sinatra.error']
+%form{:method => 'post', :action => '/'}
+  %table
+    %tr
+      %td
+        Original URL:
+      %td
+        %input{:type => 'text', :name => 'original', :size => '50'} 
+    %tr
+      %td
+        Custom name (optional):
+      %td
+        %input{:type => 'text', :name => 'slug', :size => '50'}
+    %tr
+      %td/
+      %td
+        %input{:type => 'submit', :value => 'Shorten'}

@@ -1,0 +1,19 @@
+%p
+  Statistics for
+  = @link.short_url
+%table
+  %tr
+    %td
+      Original URL:
+    %td
+      = @link.original
+  %tr
+    %td
+      Number of accesses:
+    %td
+      = @link.accesses.to_s
+  %tr
+    %td
+      Created on:
+    %td
+      = @link.created_at.strftime('%Y/%m/%d at %H:%M %Z')

@@ -5,6 +5,8 @@ require 'ruby-debug'
 require 'dm-migrations'
 
 set :environment, :test
+
+set :root, Proc.new { File.dirname(__FILE__) + "/.." }
 DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/test.db")
 DataMapper.auto_migrate!
 
