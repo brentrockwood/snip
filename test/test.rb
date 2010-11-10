@@ -65,13 +65,21 @@ class SnipTests < Test::Unit::TestCase
     end
   end
   
-  def test_invalid_uri
+  def test_no_target
     post '/'         
     assert false
     rescue
       assert $!.message.include? "Invalid URL"
-  end 
+  end
   
+  def test_invalid_target                  
+    begin
+      Snip::Link.create :original => 'httpfoo'
+    rescue
+      assert $!.message.include! "Invalid URL"
+    end
+  end
+      
   def test_accesses
     link = Snip::Link.create :original => 'http://accesses.com/', :slug => 'accesses'
     get link.short_url
